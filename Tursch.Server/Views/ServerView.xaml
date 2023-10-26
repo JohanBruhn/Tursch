@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Tursch.Server.Views.ServerView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Tursch.Server.Views"
+      xmlns:vm="clr-namespace:Tursch.Server.ViewModels"
+      d:DataContext="{d:DesignInstance vm:ServerViewModel}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <ListBox x:Name="listboxPlayers" Grid.Row="0" 
+                     Background="Black" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Center" IsHitTestVisible="False"
+                     ItemsSource="{Binding PlayerNameList}">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                            Margin="1"
+                            Foreground="White"
+                            FontSize="15"
+                            Width="500"
+                            Height="17"
+                            TextAlignment="Center"
+                            Text="{Binding}"
+                            />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox x:Name="listboxMessages" Grid.Row="1" 
+                     Background="Gray" Foreground="Black" BorderThickness="0" HorizontalContentAlignment="Center" IsHitTestVisible="False"
+                     ItemsSource="{Binding Messages}">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                            Margin="1"
+                            Foreground="White"
+                            FontSize="10"
+                            Width="500"
+                            Height="13"
+                            TextAlignment="Center"
+                            Text="{Binding}"
+                            />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

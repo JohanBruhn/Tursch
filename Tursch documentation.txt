@@ -1,0 +1,71 @@
+Description of the program runtime:
+
+Program start:
+Program application starts through .WPF, also runs .SignalR to facilitate later hub creation
+Instantiates MainWindow with a frame that holds all other pages for the .WPF app over the course of the program
+Default page for the MainWindowFrame is MenuPage, which holds buttons that access HostSetupView and JoinSetupView respectively.
+
+HostSetupView:
+Holds three text fields that take host IP, host Port, and host username.
+Return button simply navigates back to MenuPage, Create lobby button calls App.StartServer() and does the following:
+	Builds client hub connection from host IP and host Port
+	Creates a new HostLobbyViewModel through its CreateConnectedViewModel() method, with a new SignalRClientService from the hub connection and host name as arguments.
+	Starts the server process, a reference to which is saved as a static variable in the app (to facilitate closing at a later stage).
+	Returns the HostLobbyViewModel and uses it to navigate to a new HostLobbyView with the viewmodel as DataContext.
+
+JoinSetupView:
+Works nearly identically to HostSetupView, except the Join Lobby button doesn't start a new server process, just creates a new connected JoinLobbyViewModel and
+navigates to a new JoinLobbyView with it as its DataContext.
+
+HostLobbyView:
+Holds a list of all clients currently connected to the lobby (server process), including the host.
+
+TODO: write more.
+
+TO FIND ALL INSTANCES WHERE CARD VISIBILITY IS DETERMINED (TO MAKE ALL CARDS VISIBLE FOR TOURNAMENT): SEARCH FOR "// To make all cards visible:"
+
+
+
+TO SWAP BETWEEN DEBUG/RELEASE:
+Edit Process.Start in Tursch.WPF/App.xaml.cs to hardcoded program paths for debugging, in methods OnStartup and StartServer
+
+
+
+
+
+
+Essential classes:
+--------------
+TURSCH.WPF
+--------------
+SignalRClientService: 
+    Handles communication between the client and the SignalR Hub, i.e. listens for messages from and sends messages to the server. Events handlers are implemented in the relevant ViewModels,
+    and methods for sending messages are only invoked through Commands (under Tursch.WPF/Commands), which are in turn also used by the ViewModels.
+    Best practice would likely be to split this class, so that only relevant server events are listened for and only relevant messages are available to send (already somewhat moderated by the Commands)
+CardViewModel:
+    Simple ViewModel handling the presentation of cards by linking card names to their respective resource paths. 
+GameViewModel:
+    Main game client, handles player input and presentation of the gamestate. Communicates with the server through the SignalRClientService.
+
+
+HostSetupView: Launches App.StartServer()
+
+/// <summary>
+    /// IDEAS FOR CODE:
+    /// Implement some basic animations to make gameplay understandable for user (e.g. game waits a little after dealing (and possibly flipping) all cards needed and shows who won the deal)
+    /// 
+    ///     Clients should have an "update" button for if they get desynced with server, where server just sends the whole (properly redacted) gamestate to ensure sync.
+    /// 
+
+    /// <summary>
+    /// TODO:
+    /// Implement active player marker on PlayerViews
+    /// Add a client side red felt setting so andrija can have his red table and not afk.
+    /// Add a "rules" page
+    /// Implement a "lobby closed" popup, where button moves back. (How to have lobby grayed out in the background?)
+    /// Complete Client-Server relationship using above features, with proper GUI
+    /// Implement slask- and one-up deal feature
+    /// Finish graphics (card art, overall aesthetics)
+    /// Animations?
+    /// 
+    /// </summary>

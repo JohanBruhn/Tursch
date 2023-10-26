@@ -1,0 +1,21 @@
+﻿<Window x:Class="Tursch.Server.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tursch.Server"
+        xmlns:views="clr-namespace:Tursch.Server.Views"
+        xmlns:vm="clr-namespace:Tursch.Server.ViewModels"
+        mc:Ignorable="d"
+        Title="Tursch server" 
+        Height="450" Width="800"
+        Icon="resources/icon.ico"
+        d:DataContext="{d:DesignInstance vm:MainViewModel}"
+        Background="Black">
+
+    <Grid Visibility="Visible" Margin="10">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <views:ServerView Margin="10" DataContext="{Binding ServerViewModel}" />
+        </ScrollViewer>
+    </Grid>
+</Window>

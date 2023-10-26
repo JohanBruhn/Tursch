@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <StartupObject></StartupObject>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="resources\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tursch.Domain\Tursch.Domain.csproj" />
+    <ProjectReference Include="..\Tursch.WPF\Tursch.WPF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\icon.ico" />
+  </ItemGroup>
+
+</Project>

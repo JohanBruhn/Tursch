@@ -1,0 +1,143 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="resources\avatars\defaultavatar.png" />
+    <None Remove="resources\cards\cardback.png" />
+    <None Remove="resources\cards\C\C10.png" />
+    <None Remove="resources\cards\C\C2.png" />
+    <None Remove="resources\cards\C\C3.png" />
+    <None Remove="resources\cards\C\C4.png" />
+    <None Remove="resources\cards\C\C5.png" />
+    <None Remove="resources\cards\C\C6.png" />
+    <None Remove="resources\cards\C\C7.png" />
+    <None Remove="resources\cards\C\C8.png" />
+    <None Remove="resources\cards\C\C9.png" />
+    <None Remove="resources\cards\C\CA.png" />
+    <None Remove="resources\cards\C\CJ.png" />
+    <None Remove="resources\cards\C\CK.png" />
+    <None Remove="resources\cards\C\CQ.png" />
+    <None Remove="resources\cards\D\D10.png" />
+    <None Remove="resources\cards\D\D2.png" />
+    <None Remove="resources\cards\D\D3.png" />
+    <None Remove="resources\cards\D\D4.png" />
+    <None Remove="resources\cards\D\D5.png" />
+    <None Remove="resources\cards\D\D6.png" />
+    <None Remove="resources\cards\D\D7.png" />
+    <None Remove="resources\cards\D\D8.png" />
+    <None Remove="resources\cards\D\D9.png" />
+    <None Remove="resources\cards\D\DA.png" />
+    <None Remove="resources\cards\D\DJ.png" />
+    <None Remove="resources\cards\D\DK.png" />
+    <None Remove="resources\cards\D\DQ.png" />
+    <None Remove="resources\cards\HKTest.png" />
+    <None Remove="resources\cards\H\H10.png" />
+    <None Remove="resources\cards\H\H2.png" />
+    <None Remove="resources\cards\H\H3.png" />
+    <None Remove="resources\cards\H\H4.png" />
+    <None Remove="resources\cards\H\H5.png" />
+    <None Remove="resources\cards\H\H6.png" />
+    <None Remove="resources\cards\H\H7.png" />
+    <None Remove="resources\cards\H\H8.png" />
+    <None Remove="resources\cards\H\H9.png" />
+    <None Remove="resources\cards\H\HA.png" />
+    <None Remove="resources\cards\H\HJ.png" />
+    <None Remove="resources\cards\H\HK.png" />
+    <None Remove="resources\cards\H\HQ.png" />
+    <None Remove="resources\cards\SQTest.png" />
+    <None Remove="resources\cards\S\S10.png" />
+    <None Remove="resources\cards\S\S2.png" />
+    <None Remove="resources\cards\S\S3.png" />
+    <None Remove="resources\cards\S\S4.png" />
+    <None Remove="resources\cards\S\S5.png" />
+    <None Remove="resources\cards\S\S6.png" />
+    <None Remove="resources\cards\S\S7.png" />
+    <None Remove="resources\cards\S\S8.png" />
+    <None Remove="resources\cards\S\S9.png" />
+    <None Remove="resources\cards\S\SA.png" />
+    <None Remove="resources\cards\S\SJ.png" />
+    <None Remove="resources\cards\S\SK.png" />
+    <None Remove="resources\cards\S\SQ.png" />
+    <None Remove="resources\icon.ico" />
+    <None Remove="resources\playerframe.png" />
+    <None Remove="resources\redtable.png" />
+    <None Remove="resources\table.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tursch.Domain\Tursch.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="resources\avatars\defaultavatar.png" />
+    <Resource Include="resources\cards\cardback.png" />
+    <Resource Include="resources\cards\C\C10.png" />
+    <Resource Include="resources\cards\C\C2.png" />
+    <Resource Include="resources\cards\C\C3.png" />
+    <Resource Include="resources\cards\C\C4.png" />
+    <Resource Include="resources\cards\C\C5.png" />
+    <Resource Include="resources\cards\C\C6.png" />
+    <Resource Include="resources\cards\C\C7.png" />
+    <Resource Include="resources\cards\C\C8.png" />
+    <Resource Include="resources\cards\C\C9.png" />
+    <Resource Include="resources\cards\C\CA.png" />
+    <Resource Include="resources\cards\C\CJ.png" />
+    <Resource Include="resources\cards\C\CK.png" />
+    <Resource Include="resources\cards\C\CQ.png" />
+    <Resource Include="resources\cards\D\D10.png" />
+    <Resource Include="resources\cards\D\D2.png" />
+    <Resource Include="resources\cards\D\D3.png" />
+    <Resource Include="resources\cards\D\D4.png" />
+    <Resource Include="resources\cards\D\D5.png" />
+    <Resource Include="resources\cards\D\D6.png" />
+    <Resource Include="resources\cards\D\D7.png" />
+    <Resource Include="resources\cards\D\D8.png" />
+    <Resource Include="resources\cards\D\D9.png" />
+    <Resource Include="resources\cards\D\DA.png" />
+    <Resource Include="resources\cards\D\DJ.png" />
+    <Resource Include="resources\cards\D\DK.png" />
+    <Resource Include="resources\cards\D\DQ.png" />
+    <Resource Include="resources\cards\H\H10.png" />
+    <Resource Include="resources\cards\H\H2.png" />
+    <Resource Include="resources\cards\H\H3.png" />
+    <Resource Include="resources\cards\H\H4.png" />
+    <Resource Include="resources\cards\H\H5.png" />
+    <Resource Include="resources\cards\H\H6.png" />
+    <Resource Include="resources\cards\H\H7.png" />
+    <Resource Include="resources\cards\H\H8.png" />
+    <Resource Include="resources\cards\H\H9.png" />
+    <Resource Include="resources\cards\H\HA.png" />
+    <Resource Include="resources\cards\H\HJ.png" />
+    <Resource Include="resources\cards\H\HK.png" />
+    <Resource Include="resources\cards\H\HQ.png" />
+    <Resource Include="resources\cards\S\S10.png" />
+    <Resource Include="resources\cards\S\S2.png" />
+    <Resource Include="resources\cards\S\S3.png" />
+    <Resource Include="resources\cards\S\S4.png" />
+    <Resource Include="resources\cards\S\S5.png" />
+    <Resource Include="resources\cards\S\S6.png" />
+    <Resource Include="resources\cards\S\S7.png" />
+    <Resource Include="resources\cards\S\S8.png" />
+    <Resource Include="resources\cards\S\S9.png" />
+    <Resource Include="resources\cards\S\SA.png" />
+    <Resource Include="resources\cards\S\SJ.png" />
+    <Resource Include="resources\cards\S\SK.png" />
+    <Resource Include="resources\cards\S\SQ.png" />
+    <Resource Include="resources\icon.ico" />
+    <Resource Include="resources\playerframe.png" />
+    <Resource Include="resources\redtable.png" />
+    <Resource Include="resources\table.png" />
+  </ItemGroup>
+
+</Project>
