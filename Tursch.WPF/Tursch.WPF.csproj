@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="resources\activeindicator.png" />
     <None Remove="resources\avatars\defaultavatar.png" />
     <None Remove="resources\cards\cardback.png" />
     <None Remove="resources\cards\C\C10.png" />
@@ -65,6 +66,7 @@
     <None Remove="resources\cards\S\SJ.png" />
     <None Remove="resources\cards\S\SK.png" />
     <None Remove="resources\cards\S\SQ.png" />
+    <None Remove="resources\crown.png" />
     <None Remove="resources\icon.ico" />
     <None Remove="resources\playerframe.png" />
     <None Remove="resources\redtable.png" />
@@ -80,6 +82,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="resources\activeindicator.png" />
     <Resource Include="resources\avatars\defaultavatar.png" />
     <Resource Include="resources\cards\cardback.png" />
     <Resource Include="resources\cards\C\C10.png" />
@@ -134,6 +137,7 @@
     <Resource Include="resources\cards\S\SJ.png" />
     <Resource Include="resources\cards\S\SK.png" />
     <Resource Include="resources\cards\S\SQ.png" />
+    <Resource Include="resources\crown.png" />
     <Resource Include="resources\icon.ico" />
     <Resource Include="resources\playerframe.png" />
     <Resource Include="resources\redtable.png" />

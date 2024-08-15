@@ -51,8 +51,9 @@
 
         <!-- ListView for cards on table. Cards have been scaled by a factor 0.8 and overlap increased to preserve table space -->
         <Canvas x:Name="canvasTablePile" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <ListView x:Name="listViewTable" ItemsSource="{Binding CardsOnTable}" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
-                  Canvas.Top="{Binding TablePileCanvasTop}" Canvas.Left="{Binding TablePileCanvasLeft}" ClipToBounds="False">
+            <ListView x:Name="listViewTable" ItemsSource="{Binding CardsOnTable}" 
+                      HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" BorderThickness="0"
+                      Canvas.Top="{Binding TablePileCanvasTop}" Canvas.Left="{Binding TablePileCanvasLeft}" ClipToBounds="False">
                 <ListBox.Template>
                     <ControlTemplate>
                         <Border Padding="5,5,65,5" BorderThickness="0">
@@ -108,6 +109,23 @@
                HorizontalAlignment="Center" VerticalAlignment="Center"
                Margin="0,0,270,0"
                />
+        <Image x:Name="imgActiveIndicator" Height="40" Width="80" Source="{Binding ActiveIndicatorImagePath}"
+               Visibility="{Binding ActiveIndicatorVisibility}"
+               Margin="0,0,270,140"
+               />
+        <Image x:Name="imgCrown" Height="40" Width="80" Source="{Binding CrownImagePath}"
+               Visibility="{Binding CrownVisibility}"
+               Margin="0,0,270,140"
+               />
+        <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Image x:Name="imgCardCrown" Height="40" Width="80" Source="{Binding CrownImagePath}"
+               Visibility="{Binding CardCrownVisibility}"
+               Canvas.Top="{Binding TablePileCanvasTop}"
+               Canvas.Left="{Binding TablePileCanvasLeft}"
+               Margin="85,-38,0,0"
+            />
+        </Canvas>
+            
         <Label x:Name="lblPlayerName"
                Content="{Binding PlayerName}"
                FontSize="20" 

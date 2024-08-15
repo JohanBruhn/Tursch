@@ -24,11 +24,15 @@ namespace Tursch.WPF
         public HostSetupView()
         {
             InitializeComponent();
+            textboxServerIPInput.Text = "127.0.0.1";
+            textboxServerPortInput.Text = "5000";
         }
 
-        public HostSetupView(string playerName)
+        public HostSetupView(string ip, string port, string playerName)
         {
             InitializeComponent();
+            textboxServerIPInput.Text = ip;
+            textboxServerPortInput.Text = port;
             textboxUsernameInput.Text = playerName;
         }
 

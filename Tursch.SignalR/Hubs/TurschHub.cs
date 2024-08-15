@@ -60,6 +60,7 @@ namespace Tursch.SignalR.Hubs
         public async Task ServerSendRegisterConfirmation(string clientConnectionID, List<string> playerNameList)
         {
             Console.WriteLine("Hub adding player to client group and forwarding playerNameList to clients"); // -------------------------------------------- Testing
+            //if(Clients.Group("Clients").)
             await Groups.AddToGroupAsync(clientConnectionID, "Clients");
 
             await Clients.Group("Clients").SendAsync("ClientReceivePlayerList", playerNameList);
@@ -75,7 +76,7 @@ namespace Tursch.SignalR.Hubs
 
         public async Task ServerSendStartGameConfirmation(List<string> jsonPlayerInfo)
         {
-            Console.WriteLine("Hub forwarding start game confirmation to clients, along with player info list (json strings)");
+            Console.WriteLine("Hub forwarding start game confirmation to clients, along with player info list (dealWinner index and json strings)");
             await Clients.Group("Clients").SendAsync("ClientReceiveStartGame", jsonPlayerInfo);
         }
 
@@ -130,10 +131,10 @@ namespace Tursch.SignalR.Hubs
             await Clients.Group("Clients").SendAsync("GameClientReceiveEndOfGame", winner, loser, balanceChange, flippedCardLists);
         }
 
-        public async Task GameServerSendInitialDeal(List<List<string>> dealtCards)
+        public async Task GameServerSendInitialDeal(List<List<string>> dealtCards, int dealWinner)
         {
             Console.WriteLine("Hub forwarding initial deal to clients, along with dealt cards");
-            await Clients.Group("Clients").SendAsync("GameClientReceiveInitialDeal", dealtCards);
+            await Clients.Group("Clients").SendAsync("GameClientReceiveInitialDeal", dealtCards, dealWinner);
         }
     }
 }

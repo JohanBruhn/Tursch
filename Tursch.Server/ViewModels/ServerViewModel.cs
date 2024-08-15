@@ -209,17 +209,17 @@ namespace Tursch.Server.ViewModels
             
             // TODO: Implement different bet sizes
             ActiveGame = new Game(PlayerList, 1);
-            int winnerSeat = ActiveGame.StartGame();
+            int dealWinner = ActiveGame.StartGame();
 
             if (!GameStarted)
             {
                 GameStarted = true;
                 // Send back initial gamestate (generate playerinfo list (with initial cards, only cards dealt up/flipped are sent as known))
-                SendServerLobbyConfirmStartGameCommand.Execute(null);
+                SendServerLobbyConfirmStartGameCommand.Execute(dealWinner);
             }
             else
             {
-                SendGameServerInitialDealCommand.Execute(null);
+                SendGameServerInitialDealCommand.Execute(dealWinner);
             }
             
 
@@ -229,7 +229,7 @@ namespace Tursch.Server.ViewModels
             // Sends each player their 5 cards on hand, when clients receive this command they also set all other player's hands to 5 unknown cards
             // Also sends active player seat to all players
             Messages.Add("Sleep done, sending command");
-            SendGameServerDealHandsCommand.Execute(winnerSeat); 
+            SendGameServerDealHandsCommand.Execute(dealWinner); // Redundant  
         }
 
         

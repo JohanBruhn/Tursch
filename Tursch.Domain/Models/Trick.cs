@@ -30,7 +30,7 @@ namespace Tursch.Domain.Models
             set { _runningHighestValue = value; }
         }
 
-        private int _cardAmount;
+        private int _cardAmount; // The number of cards of the running highest value that was played, i.e. single/pair/triple/quads
         private bool _validPlay;
         private bool _winnableFlag;
 
@@ -47,6 +47,7 @@ namespace Tursch.Domain.Models
             errorMessage = "";
         }
 
+        // Player activePlayer attempts to play cards playedCardsToString.
         public bool Play(Player activePlayer, List<string> playedCardsToString)
         {
             List<Card> playedCards = new();
@@ -73,16 +74,18 @@ namespace Tursch.Domain.Models
                 else
                 {
                     _validPlay = false;
-                    errorMessage = "Cards aren't same";
+                    errorMessage = "Cards aren't of the same value";
                 }
 
             }
+
             // Number of cards played must match number of cards played by previous player(s)
             else if (playedCards.Count != _cardAmount)
             {
                 _validPlay = false;
-                errorMessage = "Wrong amount of cards played";
+                errorMessage = "Incorrect number of cards played";
             }
+
             // Only winning move is if all cards played are of the same value, higher than the best running value.
             else if (Card.AreSame(playedCards) && playedCards.First().GetValue() >= _runningHighestValue)
             {
@@ -111,7 +114,7 @@ namespace Tursch.Domain.Models
             {
                 // Send confirmation of play validity
                 activePlayer.ConfirmPlay(playedCards);
-                activePlayer.RemoveCards(playedCards);
+                // activePlayer.RemoveCards(playedCards); This was instead added to the ConfirmPlay method, test whether it broke anything
             }
 
             // Set next active player

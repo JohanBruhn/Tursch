@@ -39,9 +39,10 @@ namespace Tursch.Server.Commands
                 {
                     dealtCards.Add(player.GetDealToString());
                 }
+                int dealWinner = (int)parameter;
 
                 _viewModel.Messages.Add("Sending initial deal to " + dealtCards.Count + " players"); // ------------------------------- Temp
-                await _serverService.GameServerSendInitialDeal(dealtCards);
+                await _serverService.GameServerSendInitialDeal(dealtCards, dealWinner);
 
                 // _viewModel.ErrorMessage = string.Empty;
             }

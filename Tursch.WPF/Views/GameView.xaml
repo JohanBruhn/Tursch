@@ -12,9 +12,10 @@
     <Grid>
         <Grid>
             <Grid.Background>
-                <ImageBrush ImageSource="../resources/table.png"/>
+                <ImageBrush ImageSource="{Binding TableImagePath}"/>
                 <!--
-            <ImageBrush ImageSource="{Binding TableImagePath}"/>
+                <ImageBrush ImageSource="{Binding TableImagePath}"/>
+                <ImageBrush ImageSource="../resources/table.png"/>
             -->
             </Grid.Background>
 

@@ -23,6 +23,7 @@ Holds a list of all clients currently connected to the lobby (server process), i
 TODO: write more.
 
 TO FIND ALL INSTANCES WHERE CARD VISIBILITY IS DETERMINED (TO MAKE ALL CARDS VISIBLE FOR TOURNAMENT): SEARCH FOR "// To make all cards visible:"
+Seems to be OtherPlayerViewModel and Game.cs(?)
 
 
 
@@ -38,17 +39,159 @@ Essential classes:
 --------------
 TURSCH.WPF
 --------------
+App:
+    The main class of the program. Spawns two child processes: the _signalRProcess which handles communication between client and server, and the _serverProcess which handles the gamestate and game logic. 
+    Currently has two methods StartServer and JoinServer which should probably have a lot of or all of their features moved over to their respective LobbyViewModels. The only part that needs to be in the App class is the Process.Start, rest could be moved.
+    TODO - Move all that can be moved.
+
 SignalRClientService: 
     Handles communication between the client and the SignalR Hub, i.e. listens for messages from and sends messages to the server. Events handlers are implemented in the relevant ViewModels,
     and methods for sending messages are only invoked through Commands (under Tursch.WPF/Commands), which are in turn also used by the ViewModels.
-    Best practice would likely be to split this class, so that only relevant server events are listened for and only relevant messages are available to send (already somewhat moderated by the Commands)
+    TODO - Best practice would likely be to split this class, so that only relevant server events are listened for and only relevant messages are available to send (already somewhat moderated by the Commands)
+
+--- ViewModels ---
+ViewModelBase:
+    Parent class of all other ViewModels, provides PropertyChanged notification functionality.
 CardViewModel:
     Simple ViewModel handling the presentation of cards by linking card names to their respective resource paths. 
 GameViewModel:
-    Main game client, handles player input and presentation of the gamestate. Communicates with the server through the SignalRClientService.
+    Main game client, handles player input and presentation of the gamestate. Communicates with the server through the SignalRClientService using the SendGameClient- commands. See class comments for specific method descriptions and subscribed events.
+    TODO - Ensure only the host can send a start-next-round command, or at least that the server will only act on such a command from the host. Potentially also fix seat assignment to not be disgustingly hardcoded (low priority).
+HostLobbyViewModel:
+    Handles hosting a game lobby. Generates and navigates to the GameView once the server confirms that the game is starting, or navigates back to a HostSetupView if the lobby is disbanded.
+JoinLobbyViewModel:
+    Handles joining an existing game lobby. Works essentially the same as the HostLobbyViewModel but can't start the game or disband the lobby, it can only leave and listen for server events. 
+PlayerViewModelBase:
+    Parent class for PlayerViewModels, contains shared functionality (avatar, playername, balance, card collections etc.)
+OtherPlayerViewModel:
+    Displays an opposing player. Takes specifed coordinates for placement and cards on hand are hidden.
+OwnPlayerViewModel:
+    Displays local player with default coordinate placement, has card selection, and shows all cards on hand.
+
+--- Views ---
+CardView:
+    Simple container holding a .png with a bound CardImagePath string
+GameView:
+    Displays the gamestate as well as buttons for player input. Holds one OwnPlayerView bound to the variable Seat0 and up to five OtherPlayerViews bound to Seat1 through Seat5. Also contains a .png with a hardcoded resource path string for the background (table)
+    Lastly holds two buttons bound to the SendGameClient- commands, one for starting the next round and the other for performing a game action, both only visible when appropriate.
+HostLobbyView:
+    Holds a bound LobbyTitle string, a bound PlayerList and two buttons, one for starting the game and one for disbanding the lobby and both bound to their respective SendHostLobby- commands.
+    The view class handles generating and navigating back to a HostSetupView if the lobby is disbanded.
+HostSetupView:
+    Holds three TextBoxes for input of host IP, host port, and player name. Also has two buttons, one for creating a lobby and starting a server with the specified IP, port and player name, and one for returning to the main menu.
+    The view class generates and navigates to a HostLobbyView(+Model). The HostLobbyViewModel is returned by the App.StartServer method, which also spawns the server process.
+    TODO - Ideally some of this logic should be handled in the viewmodel instead of the view class, maybe the button presses can be bound to methods? There should probably be ViewModels for the setup classes, probably fixable in there.
+JoinLobbyView:
+    Holds a bound LobbyTitle and a bound PlayerList, as well as one button that sends a SendJoinLobbyLeaveCommand to the server and returns to the JoinSetupView.
+    The view class generates and navigates to a new JoinSetupView.
+JoinSetupView:
+    Works similarly to the HostSetupView, except the join button connects to a server instead of starting one.
+    The view class also works similarly to its HostSetupView counterpart, except it creates its JoinLobbyViewModel through the App.JoinServer method instead.
+    TODO - See HostSetupView
+MenuPage:
+    Simply holds buttons that navigate to other pages, namely HostSetupView and JoinSetupView. 
+    The view class handles navigation.
+    TODO - Add settings and rules pages.
+OtherPlayerView:
+    See OtherPlayerViewModel.
+OwnPlayerView:
+    Same as OtherPlayerView except the cards are selectable
+
+--- Commands --- (All executed through the clientService)
+SendGameClientPerformActionCommand: 
+    Client requests to play or swap selected cards
+SendGameClientStartNextRoundCommand: 
+    Host client requests server to start the next round of an active game
+SendHostLobbyDisbandLobbyCommand: 
+    Host client requests server to disband the current lobby
+SendHostLobbyRegisterPlayerCommand: 
+    Host client requests to be added to the current lobby player list of the server
+SendHostLobbyStartGameCommand: 
+    Host client requests server to start the game with the current players in the lobby
+SendJoinLobbyLeaveCommand: 
+    Non-host client requests to be removed from the current lobby player list of the server
+SendJoinLobbyRegisterPlayerCommand: 
+    Non-host client requests to be added to the current lobby player list of the server
 
 
-HostSetupView: Launches App.StartServer()
+
+--------------
+TURSCH.Domain
+--------------
+Card:
+    Represents cards (with a suit and a value) and card logic (comparing values, editing hands)
+Game:
+    Contains the game logic used by the server to run the game
+    TODO - Add case for trying to deal from an empty deck, the slask feature, 1-up swaps and case for two players getting dealt the same hands (value wise)
+Player:
+    Player representation used by the Game class and server. Holds user information for server use, as well as all cards in a player's possession along with a username and monetary balance.
+    Also manages data manipulation of the Player class.
+    TODO - Implement other avatars (also custom balance in PlayerInfo generation method?)
+PlayerInfo:
+    Essentially a glorified struct, used to send player information from the server to the clients for PlayerViewModel generation at the start of the game.
+    TODO - Make a better description and investigate whether or not this class even needs to exist.
+Trick:
+    Representation of one trick. Handles checking if a play is valid and whether or not it is (potentially) winning
+    TODO - Test whether or not moving the RemoveCards call to the Player class broke anything (see end of Trick class, line 117 at time of writing)
+
+
+
+--------------
+TURSCH.Server
+--------------
+App:
+    The program file for the server. Simply establishes the connection, creates an instance of the viewmodel and opens the server window.
+
+SignalRServerService:
+    Similar to the SignalRClientService, except it handles communication between the server and the SignalR Hub. Events handlers are implemented in the relevant ViewModels,
+    and methods for sending messages are only invoked through Commands (under Tursch.Server/Commands), which are in turn also used by the ViewModels.
+    Best practice would likely be to split this class, so that only relevant server events are listened for and only relevant messages are available to send (already somewhat moderated by the Commands)
+
+--- ViewModels ---
+MainViewModel:
+    Simply holds the ServerViewModel once the server has been started successfully
+    TODO - Justify why this is necessary
+ServerViewModel:
+    Essentially runs the game; holds the single instance of the Game class during play and handles incoming client requests, both in lobby and in game.
+    TODO - Best practice would probably be to split this class into separate lobby- and game classes.
+
+--- Views ---
+ServerView:
+    Simply holds server messages to allow for monitoring of the server state.
+
+--- Commands --- (All executed through the serverService)
+SendGameServerBeginPlayCommand:
+    Server alerts clients of round start as well as whose turn it is
+SendGameServerConfirmPlayCommand:
+    Server forwards a valid play to all clients
+SendGameServerConfirmSwapCommand:
+    Server forwards a valid swap to all clients
+SendGameServerDealHandsCommand:
+    Server sends all players their respective dealt hands
+SendGameServerEndOfGameCommand:
+    Server sends end of game message along with information about the winner, loser, balance change and potential tie-break flips.
+    TODO - Are tie-breaks flips currently done one card at a time? Or all at once? Should be one at a time (with increasing delay?) for suspense.
+SendGameServerInitialDealCommand:
+    Server sends initial deal to all clients
+SendServerLobbyConfirmLeaveCommand:
+    Server confirms a client has left the lobby
+SendServerLobbyConfirmRegisterCommand:
+    Server confirms a client has been registered in the lobby
+SendServerLobbyConfirmStartGameCommand:
+    Server alerts all clients that the lobby is closed and the game is starting. Also forwards a json-serialized list of playerInfo objects representing the user information of the players.
+SendServerStartedServerConfirmationCommand:
+    Server confirms successful start and lobby creation to the host.
+
+--------------
+TURSCH.SignalR
+--------------
+TurschHub:
+    Handles communication between the server and all clients by forwarding messages along with key variables.
+Program:
+    Runs the Hub.
+
+
+
 
 /// <summary>
     /// IDEAS FOR CODE:
@@ -59,13 +202,15 @@ HostSetupView: Launches App.StartServer()
 
     /// <summary>
     /// TODO:
-    /// Implement active player marker on PlayerViews
-    /// Add a client side red felt setting so andrija can have his red table and not afk.
+    /// Add a settings page with a client side red felt setting so andrija can have his red table and not afk.
+    /// Also add Avatar settings
     /// Add a "rules" page
     /// Implement a "lobby closed" popup, where button moves back. (How to have lobby grayed out in the background?)
     /// Complete Client-Server relationship using above features, with proper GUI
     /// Implement slask- and one-up deal feature
     /// Finish graphics (card art, overall aesthetics)
     /// Animations?
-    /// 
+    /// IMPLEMENT A TIME LIMIT ON ACTIONS AS WELL AS A FORCED DEFAULT PLAY
+    /// Fix ugly code (move LobbyViewModel things from App)
+    /// See TODO notes in documentation
     /// </summary>

@@ -32,7 +32,7 @@ namespace Tursch.WPF.Commands
             try
             {
                 Console.WriteLine("Sending disband command"); // ------------------------------- Temp
-                await _clientService.ClientSendDisbandLobbyCommand();
+                await _clientService.ClientSendDisbandLobbyCommand(); // Requests server to disband the lobby
 
                 // _viewModel.ErrorMessage = string.Empty;
             }

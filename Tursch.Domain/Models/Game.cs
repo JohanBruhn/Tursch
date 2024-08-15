@@ -59,7 +59,7 @@ namespace Tursch.Domain.Models
         
 
         // Generate deck, deal cards, find winner, then wait for server to send out deal info before drawing cards
-        public int StartGame() // Add case for deck running out (add variable discard pile, shuffle and deal from there if needed?)
+        public int StartGame() // TODO: Add case for deck running out (add variable discard pile, shuffle and deal from there if needed?)
         {
             // Generate deck, shuffle
             _deck = GenerateDeck();
@@ -73,12 +73,11 @@ namespace Tursch.Domain.Models
             return _activePlayer.SeatNumber;
         }
 
-        // Add slask eventually (if highest value in hand is 10, display trash button for 2? 3? sec. If trashed, hand is shown to all players for a sec or two.
+        // TODO: Add slask eventually (if highest value in hand is 10, display trash button for 2? 3? sec. If trashed, hand is shown to all players for a sec or two.
 
-        // begin swap round, send prompt to player. int -1 = won the deal, can swap any number of cards.
-        // Add 1-up swaps
-        //_swapNumber = this.SwapRound(_activePlayer, -1);
+        // TODO: Add 1-up swaps
 
+        // Add dealt cards to player hands, then begin swap round
         public void DrawDealtCards()
         {
             foreach (Player player in _players)
@@ -88,13 +87,16 @@ namespace Tursch.Domain.Models
             SwapRound = true;
         }
 
+        // Player requests a swap, returns whether or not the swap was successful and a list of the new cards dealt.
         public (bool, List<string>) RequestSwap(List<string> cards)
         {
             List<string> newCards = new();
             if (ActivePlayer.HasCards(cards))
             {
+                // If _swapNumber is not yet set (-1), set it to cards.Count
                 if (_swapNumber == -1) { _swapNumber = cards.Count; }
 
+                // Swapping no cards, _swapNumber cards or all cards are all legal
                 if (cards.Count == 0 || cards.Count == _swapNumber || cards.Count == ActivePlayer.GetHand().Count)
                 {
                     
@@ -119,10 +121,12 @@ namespace Tursch.Domain.Models
             return (false, newCards);
         }
 
+        // Player requests a play, returns whether the play was valid, whether the trick is over, and whether the game is over.
         public (bool, bool, bool) RequestPlay(List<string> cards)
         {
             if (ActivePlayer.HasCards(cards))
             {
+                // Attempt to play the cards, returns true if successful
                 bool validPlay = this.ActiveTrick.Play(this.ActivePlayer, cards);
                 bool trickIsOver = false;
                 bool gameIsOver = false;
@@ -144,6 +148,7 @@ namespace Tursch.Domain.Models
                         {
                             gameIsOver = true;
                         }
+                        // else, the current trick leader begins the next trick
                         else
                         {
                             trickIsOver = true;
@@ -157,6 +162,7 @@ namespace Tursch.Domain.Models
             return (false, false, false);
         }
 
+        // End of round logic, returns the game winner, loser, their balance change and potential tie-break flipped cards.
         public (Player winner, Player loser, float balanceChange, List<List<string>> flippedCardLists) EndOfRound()
         {
             List<Player> potentialWinners = new();
@@ -197,17 +203,18 @@ namespace Tursch.Domain.Models
                 }
             }
 
+
             // Determine singular winner and loser (function works identically to function above except it loops until only 1 remains, playValue is defined by the flip
             // and compared against a new runningFlipValue to preserve running low and high for payout stage
             // Calculate everything first, then send end of game command with list of flipped cards for all players, winning and losing seat, and balance updates.
             // All dramatic animations for displaying winners and losers are displayed client-side
             // After this, server should wait for start game message from host (re-use same as for initial start?)
+
             List<List<string>> flippedCardLists = new();
             foreach (Player player in _players)
             {
                 flippedCardLists.Add(new List<string>());
             }
-
 
             int runningFlipValue = 0;
             while (potentialWinners.Count > 1 && potentialWinners.Count < _players.Count)
@@ -258,6 +265,7 @@ namespace Tursch.Domain.Models
                 }
                 potentialLosers = localPotentialLosers;
             }
+
 
             // Pay out
             float balanceChange = this._bet * (runningHighestValue - runningLowestValue);
@@ -312,7 +320,7 @@ namespace Tursch.Domain.Models
             }
         }
 
-        // Deals specified number of cards to given player, hidden to all or visible to all
+        // Deals one card to given player, hidden to all or visible to all
         private Card DealOne(Player player, bool visible)
         {
             Card card = _deck.First();
@@ -322,6 +330,7 @@ namespace Tursch.Domain.Models
             return returnCard;
         }
 
+        // Adds specified number of cards to given player, hidden to all others.
         private List<string> AddToPlayer(int cards, Player player)
         {
             List<string> newCards = new();
@@ -334,7 +343,8 @@ namespace Tursch.Domain.Models
             return newCards;
         }
 
-        private Player FindHighestDeal(List<Player> players) // Currently if two players are dealt the same hand the app will crash
+        // Determine winner of swap round
+        private Player FindHighestDeal(List<Player> players) // TODO: Currently if two players are dealt the same hand the app will crash, fix pls
         {
             List<Player> contenders = new();
             int currentHighestValue = 0;
@@ -373,7 +383,7 @@ namespace Tursch.Domain.Models
         
 
         
-
+        // Iterates _activePlayer to the next player in the list, looping if the end is reached.
         private void NextPlayer()
         {
             _activePlayer = _players[(_players.IndexOf(_activePlayer) + 1) % _players.Count()];

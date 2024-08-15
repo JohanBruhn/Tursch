@@ -41,7 +41,7 @@ namespace Tursch.Server.Commands
                     connectionIDs.Add(player.GetConnectionID());
                     hands.Add(player.GetHandToString());
                 }
-                Player player1 = _viewModel.ActiveGame.ActivePlayer;
+                Player player1 = _viewModel.ActiveGame.ActivePlayer; // Probably redundant
                 _viewModel.Messages.Add("Getting seat number");
                 
                 int activePlayerSeatNumber = (int)parameter;

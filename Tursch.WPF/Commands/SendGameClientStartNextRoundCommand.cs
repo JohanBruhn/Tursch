@@ -24,7 +24,7 @@ namespace Tursch.WPF.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return true; // IMPLEMENT
+            return true; // TODO: IMPLEMENT
         }
 
         public async void Execute(object? parameter)
@@ -32,8 +32,8 @@ namespace Tursch.WPF.Commands
             try
             {
                 Console.WriteLine("Sending start next round command"); // ------------------------------- Temp
-                _viewModel.NextRoundButtonVisibility = System.Windows.Visibility.Hidden;
-                await _clientService.ClientSendStartGameCommand();
+                await _clientService.ClientSendStartGameCommand(); // Requests that the server start the next round of play
+                _viewModel.NextRoundButtonVisibility = System.Windows.Visibility.Hidden; // Hides the next round button
 
                 // _viewModel.ErrorMessage = string.Empty;
             }

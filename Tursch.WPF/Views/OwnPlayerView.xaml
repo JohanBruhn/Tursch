@@ -62,7 +62,9 @@
         </ListView>
         
         <!-- ListView for cards on table. Cards have been scaled by a factor 0.8 and overlap increased to preserve table space -->
-        <ListView x:Name="listViewTable" ItemsSource="{Binding CardsOnTable}" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0,0,0,0">
+        <ListView x:Name="listViewTable" ItemsSource="{Binding CardsOnTable}" 
+                  HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" BorderThickness="0" 
+                  Margin="0,0,0,0">
             <ListBox.Template>
                 <ControlTemplate>
                     <Border Padding="5,25,65,25" BorderThickness="0">
@@ -105,16 +107,28 @@
                     <local:CardView DataContext="{Binding}" Width="80" Height="112"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
-
         </ListView>
 
-
         <Image x:Name="imgBackground" Height="90" Width="360" Source="{Binding BackgroundImagePath}"/>
+
         <Image x:Name="imgAvatar" Height="80" Width="80" Source="{Binding AvatarImagePath}"
                HorizontalAlignment="Center" VerticalAlignment="Center"
                Margin="0,0,270,0"
                />
+        
+        <Image x:Name="imgActiveIndicator" Height="40" Width="80" Source="{Binding ActiveIndicatorImagePath}"
+               Visibility="{Binding ActiveIndicatorVisibility}"
+               Margin="0,0,270,140"
+               />
+        <Image x:Name="imgCrown" Height="40" Width="80" Source="{Binding CrownImagePath}"
+               Visibility="{Binding CrownVisibility}"
+               Margin="0,0,270,140"
+               />
+        <Image x:Name="imgCardCrown" Height="40" Width="80" Source="{Binding CrownImagePath}"
+               Visibility="{Binding CardCrownVisibility}"
+               Margin="80,-470,0,0"
+               />
+        
         <Label x:Name="lblPlayerName"
                Content="{Binding PlayerName}"
                FontSize="20" 

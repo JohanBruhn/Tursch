@@ -25,11 +25,14 @@ namespace Tursch.WPF
         public JoinSetupView()
         {
             InitializeComponent();
+            textboxServerPortInput.Text = "5000";
         }
 
-        public JoinSetupView(string playerName)
+        public JoinSetupView(string serverIP, string serverPort, string playerName)
         {
             InitializeComponent();
+            textboxServerIPInput.Text = serverIP;
+            textboxServerPortInput.Text = serverPort;
             textboxUsernameInput.Text = playerName;
         }
 

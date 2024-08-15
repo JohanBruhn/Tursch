@@ -10,13 +10,11 @@ namespace Tursch.Domain.Models
     {
         private char _suit;
         private int _value;
-        private string _imagePath;
 
         public Card(char suit, int value)
         {
             _suit = char.ToUpper(suit);
             _value = value;
-            _imagePath = "resources/cards/" + _suit + "/" + this.ToString() + ".png";
         }
 
         public Card(string cardString)
@@ -41,14 +39,12 @@ namespace Tursch.Domain.Models
                     _value = int.Parse(valueString);
                     break;
             }
-            _imagePath = "";
         }
 
         public Card(Card card)
         {
             _suit = card.GetSuit();
             _value = card.GetValue();
-            _imagePath = card.GetImagePath();
         }
 
         // Unknown card for players
@@ -56,7 +52,6 @@ namespace Tursch.Domain.Models
         {
             _suit = ' ';
             _value = 0;
-            _imagePath = "resources/cards/cardback.png";
         }
 
         public override string ToString()
@@ -110,9 +105,14 @@ namespace Tursch.Domain.Models
 
         public string GetImagePath()
         {
-            return _imagePath;
+            if(_value == 0)
+            {
+                return "resources/cards/cardback.png";
+            }
+            return "resources/cards/" + _suit + "/" + this.ToString() + ".png";
         }
 
+        // Checks whether a list of cards are all of the same value
         public static bool AreSame(List<Card> cards)
         {
             int runningValue = cards.First().GetValue();

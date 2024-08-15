@@ -26,7 +26,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHub<TurschHub>("/Tursch");
 });
 
-//app.UseAuthorization();
+//app.UseAuthorization(); // IMPLEMENT AT SOME POINT
 
 app.MapRazorPages();
 

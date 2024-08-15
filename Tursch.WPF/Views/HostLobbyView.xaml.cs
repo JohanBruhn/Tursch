@@ -30,10 +30,5 @@ namespace Tursch.WPF
 
         // Server awaits: Connection(s)/Host starts game/Disconnection(s)/Host closes lobby
         // Host and clients await: lobby update from server, or send command (disconnect/disband lobby)
-
-        private void btnReturnLobby_Click(object sender, RoutedEventArgs e)
-        {
-            this.NavigationService.Navigate(new HostSetupView());
-        }
     }
 }

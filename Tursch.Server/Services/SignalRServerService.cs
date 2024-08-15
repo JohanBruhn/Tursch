@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Tursch.Domain.Models;
+using Tursch.Server.ViewModels;
 
 namespace Tursch.Server.Services
 {
@@ -68,18 +69,18 @@ namespace Tursch.Server.Services
         public async Task ServerSendLeaveLobbyConfirmation(string connectionID, List<string> playerNameList)
         {
             Console.WriteLine("Server sending leave confirmation");
-            List<string> bannedNames = new List<string>{ "andrija", "wp" };
             await _connection.SendAsync("ServerSendLeaveLobbyConfirmation", connectionID, playerNameList);
         }
 
-        public async Task ServerSendStartGameConfirmation(List<PlayerInfo> playerInfo)
+        public async Task ServerSendStartGameConfirmation(List<PlayerInfo> playerInfo, int dealWinner)
         {
-            Console.WriteLine("Server serializing player info and sending start game confirmation");
             List<string> jsonPlayerInfo = new();
+            jsonPlayerInfo.Add(dealWinner.ToString());
             foreach (PlayerInfo player in playerInfo)
             {
                 jsonPlayerInfo.Add(JsonSerializer.Serialize(player));
             }
+            // v This does not happen
             await _connection.SendAsync("ServerSendStartGameConfirmation", jsonPlayerInfo);
         }
 
@@ -110,9 +111,9 @@ namespace Tursch.Server.Services
             await _connection.SendAsync("GameServerSendEndOfGameMessage", winner, loser, balanceChange, flippedCardLists);
         }
 
-        public async Task GameServerSendInitialDeal(List<List<string>> dealtCards)
+        public async Task GameServerSendInitialDeal(List<List<string>> dealtCards, int dealWinner)
         {
-            await _connection.SendAsync("GameServerSendInitialDeal", dealtCards);
+            await _connection.SendAsync("GameServerSendInitialDeal", dealtCards, dealWinner);
         }
 
     }

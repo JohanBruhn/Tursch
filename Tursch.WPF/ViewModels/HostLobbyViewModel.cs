@@ -60,6 +60,30 @@ namespace Tursch.WPF.ViewModels
             }
         }
 
+        private string _hostIP;
+
+        public string HostIP
+        {
+            get { return _hostIP; }
+            set
+            {
+                _hostIP = value;
+                OnPropertyChanged(nameof(HostIP));
+            }
+        }
+
+        private string _hostPort;
+
+        public string HostPort
+        {
+            get { return _hostPort; }
+            set
+            {
+                _hostPort = value;
+                OnPropertyChanged(nameof(HostPort));
+            }
+        }
+
 
         //private string[] _playerList;
         //public string[] PlayerList
@@ -83,9 +107,9 @@ namespace Tursch.WPF.ViewModels
         public ICommand SendHostLobbyStartGameCommand { get; }
 
         // Static construction method, creates HostLobbyViewModel object connected to SignalR hub but not registered on server.
-        public static HostLobbyViewModel CreateConnectedViewModel(SignalRClientService clientService, string playerName)
+        public static HostLobbyViewModel CreateConnectedViewModel(SignalRClientService clientService, string playerName, string hostIP, string hostPort)
         {
-            HostLobbyViewModel viewModel = new HostLobbyViewModel(clientService, playerName);
+            HostLobbyViewModel viewModel = new HostLobbyViewModel(clientService, playerName, hostIP, hostPort);
 
             clientService.Connect().ContinueWith(task =>
             {
@@ -101,12 +125,15 @@ namespace Tursch.WPF.ViewModels
         }
 
         // Constructor
-        public HostLobbyViewModel(SignalRClientService clientService, string playerName)
+        public HostLobbyViewModel(SignalRClientService clientService, string playerName, string hostIP, string hostPort)
         {
             _clientService = clientService;
+            HostIP = hostIP;
+            HostPort = hostPort;
             SendHostLobbyRegisterPlayerCommand = new SendHostLobbyRegisterPlayerCommand(this, clientService);
             SendHostLobbyDisbandLobbyCommand = new SendHostLobbyDisbandLobbyCommand(this, clientService);
             SendHostLobbyStartGameCommand = new SendHostLobbyStartGameCommand(this, clientService);
+            
 
             HostName = playerName;
             LobbyTitle = "Empty lobby";
@@ -131,12 +158,15 @@ namespace Tursch.WPF.ViewModels
             base.Dispose();
         }
 
+        // Generates the GameView (and -Model) when the server confirms the game is starting with the current connected players, then navigates to the new view. 
         private void ClientService_StartGameReceived(List<string> jsonPlayerInfo)
         {
             this.Dispose();
             Console.WriteLine("Client received start game confirmation");
             GameView gameView = new GameView();
-
+            // Extract dealWinner index, leaving only the json strings
+            int dealWinner = int.Parse(jsonPlayerInfo[0]);
+            jsonPlayerInfo.RemoveAt(0);
 
             // Deserialize list of json strings
             List<PlayerInfo> playerInfo = new();
@@ -150,7 +180,7 @@ namespace Tursch.WPF.ViewModels
                 }
             }
 
-            GameViewModel gameViewModel = App.StartGame(ClientService, playerInfo, PlayerName);
+            GameViewModel gameViewModel = App.StartGame(ClientService, playerInfo, PlayerName, dealWinner);
             gameView.DataContext = gameViewModel;
             App.GetMainWindow((App)App.Current).MainWindowFrame.NavigationService.Navigate(gameView);
         }
@@ -178,12 +208,12 @@ namespace Tursch.WPF.ViewModels
 
         }
 
+        // Unsubscribe to lobby events, close the server and navigate back to a HostSetupView.
         private void ClientService_DisbandLobbyReceived()
         {
-            // App.CloseServer();
             this.Dispose();
             App.CloseServer();
-            App.GetMainWindow((App)App.Current).MainWindowFrame.NavigationService.Navigate(new HostSetupView(PlayerName));
+            App.GetMainWindow((App)App.Current).MainWindowFrame.NavigationService.Navigate(new HostSetupView(HostIP, HostPort, PlayerName));
         }
 
 

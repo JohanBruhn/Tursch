@@ -32,7 +32,8 @@ namespace Tursch.WPF
             }
             else
             {
-                _signalRProcess = Process.Start("Tursch.SignalR.exe"); // FOR RELEASE
+                // _signalRProcess = Process.Start("Tursch.SignalR.exe"); // FOR RELEASE
+                _signalRProcess = Process.Start("C:/Users/Johan.Bruhns-dator/source/repos/Tursch/Tursch.SignalR/bin/x64/Release/net6.0/Tursch.SignalR.exe"); // FOR DEBUG
                 // _signalRProcess = Process.Start("full/path/to/Tursch.SignalR.exe"); // FOR DEBUG
             }
 
@@ -78,11 +79,12 @@ namespace Tursch.WPF
                     options.Transports = HttpTransportType.WebSockets;
                 }).Build(); // Port 5052 not working? only 5000?
 
-            HostLobbyViewModel lobbyViewModel = HostLobbyViewModel.CreateConnectedViewModel(new SignalRClientService(clientConnection), playerName);
+            HostLobbyViewModel lobbyViewModel = HostLobbyViewModel.CreateConnectedViewModel(new SignalRClientService(clientConnection), playerName, hostIP, hostPort);
 
 
             string[] args = { hostIP, hostPort, playerName };
-            _serverProcess = Process.Start("Tursch.Server.exe", args); // FOR RELEASE
+            //_serverProcess = Process.Start("Tursch.Server.exe", args); // FOR RELEASE
+            _serverProcess = Process.Start("C:/Users/Johan.Bruhns-dator/source/repos/Tursch/Tursch.Server/bin/x64/Debug/net6.0-windows/Tursch.Server.exe", args); // FOR DEBUG
             // _signalRProcess = Process.Start("full/path/to/Tursch.Server.exe"); // FOR DEBUG
 
 
@@ -92,23 +94,30 @@ namespace Tursch.WPF
 
         internal static JoinLobbyViewModel JoinServer(string joinIP, string joinPort, string playerName)
         {
-            // Does this one also need to run the Tursch.SignalR program to connect? If so, maybe just override OnStartup method and run it there, or bundle it in .exe in export somehow
+            // Default IP and port
+            if (string.IsNullOrWhiteSpace(joinIP))
+            {
+                joinIP = "127.0.0.1";
+            }
+            if (string.IsNullOrWhiteSpace(joinPort))
+            {
+                joinPort = "5000";
+            }
+
             HubConnection connection = new HubConnectionBuilder()
                 .WithUrl("http://" + joinIP + ":" + joinPort + "/Tursch", options => {
                     options.SkipNegotiation = true;
                     options.Transports = HttpTransportType.WebSockets;
                 }).Build(); // Port 5052 not working? only 5000?
-            // HubConnection connection = new HubConnectionBuilder().WithUrl(joinIP + ":" + joinPort + "/Tursch").Build();
-            // .WithUrl("http://localhost:5000/Tursch", <-- current solution, works on local machine but not over local net
 
-            JoinLobbyViewModel lobbyViewModel = JoinLobbyViewModel.CreateConnectedViewModel(new SignalRClientService(connection), playerName);
+            JoinLobbyViewModel lobbyViewModel = JoinLobbyViewModel.CreateConnectedViewModel(new SignalRClientService(connection), playerName, joinIP, joinPort);
 
             return lobbyViewModel;
         }
 
-        internal static GameViewModel StartGame(SignalRClientService clientService, List<PlayerInfo> playerInfo, string playerName)
+        internal static GameViewModel StartGame(SignalRClientService clientService, List<PlayerInfo> playerInfo, string playerName, int dealWinner)
         {
-            return new GameViewModel(clientService, playerInfo, playerName);
+            return new GameViewModel(clientService, playerInfo, playerName, dealWinner);
         }
     }
 }

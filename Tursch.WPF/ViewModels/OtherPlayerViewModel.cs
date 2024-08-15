@@ -9,75 +9,9 @@ using Tursch.Domain.Models;
 
 namespace Tursch.WPF.ViewModels
 {
-    internal class OtherPlayerViewModel : ViewModelBase
+    internal class OtherPlayerViewModel : PlayerViewModelBase
     {
-        private string _backgroundImagePath;
-        public string BackgroundImagePath
-        {
-            get { return _backgroundImagePath; }
-            set
-            {
-                _backgroundImagePath = value;
-                OnPropertyChanged(BackgroundImagePath);
-            }
-        }
-
-        private string _avatarImagePath;
-        public string AvatarImagePath
-        {
-            get { return _avatarImagePath; }
-            set {
-                _avatarImagePath = value;
-                OnPropertyChanged(AvatarImagePath);
-            }
-        }
-
-        private string _playerName;
-        public string PlayerName
-        {
-            get { return _playerName; }
-            set
-            {
-                _playerName = value;
-                OnPropertyChanged(PlayerName);
-            }
-        }
-
-        private float _balance;
-        public float Balance {
-            get { return _balance; } 
-            set 
-            { 
-                _balance = value;
-                OnPropertyChanged(nameof(Balance));
-                OnPropertyChanged(nameof(BalanceString));
-                OnPropertyChanged(nameof(BalanceColor));
-            } 
-        }
-
-        public string BalanceString
-        {
-            get
-            {
-                return Balance.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
-            }
-        }
-
-        public string BalanceColor
-        {
-            get
-            {
-                if (Balance >= 0)
-                {
-                    return "Green";
-                }
-                return "Red";
-            }
-        }
-
-        public ObservableCollection<CardViewModel> CardsOnHand { get; }
-        public ObservableCollection<CardViewModel> CardsOnTable { get; }
-
+        // Coordinates for placement on the GameView
         private double _tablePileCanvasTop;
         public double TablePileCanvasTop
         {
@@ -100,32 +34,17 @@ namespace Tursch.WPF.ViewModels
             }
         }
 
+        // Default constructor
+        public OtherPlayerViewModel() : base() { }
 
-        public OtherPlayerViewModel()
+        // Specific constructor
+        public OtherPlayerViewModel(PlayerInfo playerInfo, int seatNumber) : base(playerInfo)
         {
-            BackgroundImagePath = "../resources/playerframe.png";
-            AvatarImagePath = "../resources/defaultavatar.png";
-            PlayerName = "DefaultName";
-            Balance = 0F;
-            CardsOnHand = new ObservableCollection<CardViewModel>();
-            CardsOnTable = new ObservableCollection<CardViewModel>();
-            
-        }
+            TablePileCanvasTop = 0d; // UNIQUE
+            TablePileCanvasLeft = 0d; // UNIQUE
 
-        public OtherPlayerViewModel(PlayerInfo playerInfo, int seatNumber)
-        {
-            BackgroundImagePath = "../resources/playerframe.png";
-            AvatarImagePath = playerInfo.AvatarPath;
-            PlayerName = playerInfo.PlayerName;
-            Balance = playerInfo.Balance;
-            CardsOnHand = new ObservableCollection<CardViewModel>();
-            CardsOnTable = new ObservableCollection<CardViewModel>();
-            TablePileCanvasTop = 0d;
-            TablePileCanvasLeft = 0d;
-
-
-
-
+            // Sets coordinates depending on seatNumber
+            // UNIQUE
             switch (seatNumber)
             {
                 case 1:
@@ -149,13 +68,10 @@ namespace Tursch.WPF.ViewModels
                     TablePileCanvasLeft = -340d;
                     break;
             }
-
-            foreach (string card in playerInfo.CardsOnTable)
-            {
-                this.CardsOnTable.Add(new CardViewModel(card));
-            }
         }
 
+        // Replace current hand with 5 unknown cards
+        // TODO: To make all cards visible (for spectating) take List as parameter and add like in OwnPlayerViewModel
         public void DrawHand()
         {
             this.CardsOnTable.Clear();
@@ -165,7 +81,8 @@ namespace Tursch.WPF.ViewModels
             }
         }
 
-        // To make all cards visible: Take List as parameter instead of int and add like in OwnPlayerViewModel
+        // Add nCards unknown cards to the hand
+        // TODO: To make all cards visible, take List as parameter instead of int
         public void AddToHand(int nCards)
         {
             for (int i = 0; i < nCards; i++)
@@ -174,29 +91,13 @@ namespace Tursch.WPF.ViewModels
             }
         }
 
-        // To make all cards visible: Take list as parameter here too
+        // Remove nCards unknown cards from the hand
+        // TODO: to make all cards visible, take list as parameter here too
         public void RemoveFromHand(int nCards)
         {
             for (int i = 0; i < nCards; i++)
             {
                 CardsOnHand.RemoveAt(0);
-            }
-        }
-
-        // Add face up cards to table
-        public void AddToTable(List<string> cards)
-        {
-            foreach (string card in cards)
-            {
-                CardsOnTable.Add(new CardViewModel(card));
-            }
-        }
-        // Add face down cards to table
-        public void AddToTable(int nCards)
-        {
-            for (int i = 0; i < nCards; i++)
-            {
-                CardsOnTable.Add(new CardViewModel());
             }
         }
     }

@@ -19,7 +19,7 @@ namespace Tursch.Domain.Models
         private string _name;
         private float _playBalance;
 
-        // Used to keep track of when to end swap round, remember to reset to false when necessary
+        // Used to keep track of when to end swap round, remember to reset to false whenever necessary
         private bool _hasActed;
         public bool HasActed
         {
@@ -120,7 +120,7 @@ namespace Tursch.Domain.Models
             return result;
         }
 
-        // Returns true if each card represented in list cards exists in player's hand
+        // Returns true if each card represented in the list exists in player's hand
         public bool HasCards(List<string> cards)
         {
             List<string> hand = this.GetHandToString();
@@ -135,9 +135,11 @@ namespace Tursch.Domain.Models
             return flag;
         }
 
+        // Generate a PlayerInfo object with the information of the given player
         public static PlayerInfo GetPlayerInfo(Player player)
         {
             PlayerInfo playerInfo = new PlayerInfo(player.GetName(), "../resources/avatars/defaultavatar.png", 0.0f, player.GetDealToString(), player.SeatNumber);
+            // TODO: Implement custom/more avatars
             return playerInfo;
         }
 
@@ -187,8 +189,10 @@ namespace Tursch.Domain.Models
         public void ConfirmPlay(List<Card> cards)
         {
             _playedCards = cards;
+            this.RemoveCards(cards);
         }
 
+        // Remove Card objects from hand based on their inputted string representations. 
         public void RemoveCardsToString(List<string> cardStrings)
         {
             List<Card> cards = new();

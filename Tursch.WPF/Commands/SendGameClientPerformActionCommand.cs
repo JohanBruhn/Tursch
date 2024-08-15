@@ -34,20 +34,20 @@ namespace Tursch.WPF.Commands
             {
                 
                 Console.WriteLine("Sending perform action command"); // ------------------------------- Temp
-                if(_viewModel.ActivePlayer == 0)
+                if(_viewModel.ActivePlayer == 0) // Limits unnecessary server queries
                 {
-                    List<string> cardStrings = new List<string>();
+                    List<string> cardStrings = new List<string>(); // Selected cards to send to server
 
                     foreach (CardViewModel card in _viewModel.Seat0.SelectedCards)
                     {
                         cardStrings.Add(card.CardName);
                     }
 
-                    if(cardStrings.Count > 0 || _viewModel.IsSwapRound)
+                    if(cardStrings.Count > 0 || _viewModel.IsSwapRound) // Limits unnecessary server queries
                     {
-                        await _clientService.GameClientSendPerformActionRequest(cardStrings);
+                        await _clientService.GameClientSendPerformActionRequest(cardStrings); // Requests to play/swap selected cards
                     }
-                    // Implement this in clientservice and hub and then receive in serverservice and serverviewmodel and send back gamestate update (player n swaps/plays these cards)
+                    // TODO?: Implement this in clientservice and hub and then receive in serverservice and serverviewmodel and send back gamestate update (player n swaps/plays these cards)
 
                 }
 

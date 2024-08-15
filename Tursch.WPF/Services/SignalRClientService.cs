@@ -40,7 +40,7 @@ namespace Tursch.WPF.Services
 
         public event Action<int, int, float, List<List<string>>> EndOfGameReceived;
 
-        public event Action<List<List<string>>> InitialDealReceived;
+        public event Action<List<List<string>>, int> InitialDealReceived;
         
 
         public SignalRClientService(HubConnection connection)
@@ -56,7 +56,6 @@ namespace Tursch.WPF.Services
 
             // Json string is deserialized in event handler (in HostLobbyViewModel and JoinLobbyViewModel)
             _connection.On<List<string>>("ClientReceiveStartGame", (jsonPlayerInfo) => StartGameReceived?.Invoke(jsonPlayerInfo));
-
             _connection.On<List<string>, int>("GameClientReceiveHand", (hand, activePlayerSeatNumber) => DealtHandReceived?.Invoke(hand, activePlayerSeatNumber));
 
             _connection.On<List<string>, List<string>>("GameClientReceiveSwapConfirmation", (cards, newCards) => SwapConfirmationReceived?.Invoke(cards, newCards));
@@ -68,7 +67,7 @@ namespace Tursch.WPF.Services
 
             _connection.On<int, int, float, List<List<string>>>("GameClientReceiveEndOfGame", (winner, loser, balanceChange, flippedCardLists) => EndOfGameReceived?.Invoke(winner, loser, balanceChange, flippedCardLists));
 
-            _connection.On<List<List<string>>>("GameClientReceiveInitialDeal", (dealtCards) => InitialDealReceived?.Invoke(dealtCards));
+            _connection.On<List<List<string>>, int>("GameClientReceiveInitialDeal", (dealtCards, dealWinner) => InitialDealReceived?.Invoke(dealtCards, dealWinner));
         }
 
         internal async Task GameClientSendPerformActionRequest(List<string> cardStrings)

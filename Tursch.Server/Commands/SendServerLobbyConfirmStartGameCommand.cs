@@ -34,14 +34,16 @@ namespace Tursch.Server.Commands
             try
             {
                 List<PlayerInfo> playerInfo = _viewModel.GetPlayerInfoList();
-                _viewModel.Messages.Add("Sending start game confirmation with info list of length " + playerInfo.Count); // ------------------------------- Temp
-                await _serverService.ServerSendStartGameConfirmation(playerInfo);
+                int dealWinner = (int)parameter;
+                _viewModel.Messages.Add("Sending start game confirmation with info list of length " + playerInfo.Count + ", dealWinner is " + dealWinner); // ------------------------------- Temp
+                // ^ This happens
+                await _serverService.ServerSendStartGameConfirmation(playerInfo, dealWinner);
 
                 // _viewModel.ErrorMessage = string.Empty;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Unable to confirm registration"); // ----------------------- Temp
+                _viewModel.Messages.Add("Unable to send confirmation, error: " + e); // ----------------------- Temp
                 // _viewModel.ErrorMessage = "Unable to register";
             }
         }
