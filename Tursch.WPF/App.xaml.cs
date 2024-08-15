@@ -33,7 +33,7 @@ namespace Tursch.WPF
             else
             {
                 _signalRProcess = Process.Start("Tursch.SignalR.exe"); // FOR RELEASE
-                //_signalRProcess = Process.Start("C:/Users/Johan.Bruhns-dator/source/repos/Tursch/Tursch.SignalR/bin/x64/Release/net6.0/Tursch.SignalR.exe"); // FOR DEBUG
+                
                 // _signalRProcess = Process.Start("full/path/to/Tursch.SignalR.exe"); // FOR DEBUG
             }
 
@@ -84,7 +84,6 @@ namespace Tursch.WPF
 
             string[] args = { hostIP, hostPort, playerName };
             _serverProcess = Process.Start("Tursch.Server.exe", args); // FOR RELEASE
-            //_serverProcess = Process.Start("C:/Users/Johan.Bruhns-dator/source/repos/Tursch/Tursch.Server/bin/x64/Debug/net6.0-windows/Tursch.Server.exe", args); // FOR DEBUG
             // _signalRProcess = Process.Start("full/path/to/Tursch.Server.exe"); // FOR DEBUG
 
 
